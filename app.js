@@ -2,31 +2,28 @@ const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors=require("cors");
+const path = require("path")
+
 
 dotenv.config({path : './config.env'});
 const DB = process.env.DATABASE;
+
+
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded())
 app.use(cors())
-const port=process.env.PORT || 8000;
-mongoose.connect("mongodb+srv://rezboey:12345@cluster0.chok5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority/", {
+
+const PORT = process.env.PORT || 9002;
+
+mongoose.connect(DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true
+},() => {
+    console.log("DB connected")
 }); 
 
-// const db =mongoose.connection;
-// db.connect(function(err) {
-//     if (err) {throw err;}
-//     console.log("DB Connected!");
-//   });
-// db.on("error", console.log("DB not connected"));
-// db.once("open", function(){
-//     console.log("DB connected")
-// });
-// () => {
-//     console.log("DB connected")
-// })
+
 
 const userSchema = new mongoose.Schema({
     name: String,
@@ -73,7 +70,7 @@ app.post("/register", (req, res)=> {
         }
     })
     
-})
+}) 
 
 if(process.env.NODE_ENV === "production"){
     app.use(express.static("client/build"));
@@ -83,6 +80,7 @@ if(process.env.NODE_ENV === "production"){
     })
 }
 
-app.listen(port,() => {
-    console.log("BE started at port port")
+
+app.listen(PORT,() => {
+    console.log("BE started at port 9002")
 })
